@@ -72,7 +72,10 @@ public class Main {
                     WebElement firstResult = wait.until(presenceOfElementLocated(By.id("page-my-index")));
                     logger.info(toLatinTrans.transliterate(firstResult.findElement(By.className("headermain")).getText()) + " - online!");
                     //driver.findElement(By.partialLinkText("http://russian_moodle.sevsu.ru/login/logout.php?sesskey=")).click();
-                    driver.manage().deleteAllCookies();
+                    //driver.manage().deleteAllCookies();
+                    driver.findElement(By.xpath("/html/body/div[2]/header/div[1]/div[1]/div/div[2]/div/div[2]/div/ul[1]/li")).click();
+                    driver.findElement(By.xpath("/html/body/div[2]/header/div[1]/div[1]/div/div[2]/div/div[2]/div/ul[2]/li[8]")).click();
+
                     logger.info("Log Out.");
                     throw new Exception();
 

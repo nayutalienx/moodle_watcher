@@ -16,6 +16,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -55,7 +56,7 @@ public class Main {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         RetryExecutor executor = new AsyncRetryExecutor(scheduler).
                 retryOn(Exception.class).
-                withFixedBackoff(30000)
+                withFixedBackoff(10000)
                 .retryInfinitely();
 
         for (final Object kv : users.entrySet()) {
@@ -63,8 +64,14 @@ public class Main {
             executor.getWithRetry(new Callable<Object>() {
                 public Object call() throws Exception {
 
-                    logger.info("Authorization.");
+
+
                     driver.get(url);
+
+                    List<WebElement> elements = driver.findElements(By.name("sesskey"));
+                    elements.forEach(x ->{
+                        x.submit();
+                    });
 
                     driver.findElement(By.id("username")).sendKeys(((Map.Entry<String, String>) kv).getKey());
                     driver.findElement(By.id("password")).sendKeys(((Map.Entry<String, String>) kv).getValue());
@@ -73,10 +80,7 @@ public class Main {
                     logger.info(toLatinTrans.transliterate(firstResult.findElement(By.className("headermain")).getText()) + " - online!");
                     //driver.findElement(By.partialLinkText("http://russian_moodle.sevsu.ru/login/logout.php?sesskey=")).click();
                     //driver.manage().deleteAllCookies();
-                    driver.findElement(By.xpath("/html/body/div[2]/header/div[1]/div[1]/div/div[2]/div/div[2]/div/ul[1]/li")).click();
-                    driver.findElement(By.xpath("/html/body/div[2]/header/div[1]/div[1]/div/div[2]/div/div[2]/div/ul[2]/li[8]")).click();
 
-                    logger.info("Log Out.");
                     throw new Exception();
 
                 }
